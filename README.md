@@ -1,13 +1,15 @@
 
 ![xkcd-git](https://imgs.xkcd.com/comics/git.png)
 
+
 # Matryoshka
 
 Managing Git submodules is monotonous and — more importantly — _interruptive_ work. Managing your dependencies shouldn't keep you from being productive. This script will automate the part of updating your submodules for you.
 
 **Disclaimer: Use at your own risk. I cannot be held responsible for data loss.**
 
-If you encounter any trouble though, **please let me know**: [opensource@geeky.gent](mailto:opensource@geeky.gent?subject=Problem Matryoshka)
+If you encounter any trouble though, **please let me know**
+
 
 ## Installation & Setup
 
@@ -28,6 +30,7 @@ git submodule update
 alias MATRYOSHKA="path/to/matryoshka/matryoshka.sh"
 ```
 Don't forget to reload your shell afterwards. ;)
+
 
 ## Run
 
