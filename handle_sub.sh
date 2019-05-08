@@ -42,7 +42,7 @@ if [ ! "$upstream_status" = "" ]; then
     # Move cwd out of submodule into containing repo
     cd ..
 
-    git add .
+    git add "./$name"
     git commit -m "$commit_msg"
 
   fi
