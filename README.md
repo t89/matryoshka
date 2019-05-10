@@ -32,6 +32,25 @@ alias MATRYOSHKA="path/to/matryoshka/matryoshka.sh"
 Don't forget to reload your shell afterwards. ;)
 
 
+### Setup as submodule
+
+To enable your colleagues to access the script right within your repository, add it _as a submodule_:
+
+```bash
+# Optional — Containing Subdirectory
+$ mkdir tools
+$ cd tools
+
+# Check your staging area for uncommit changes, the following changes
+# will be staged automatically:
+$ git submodule add https://github.com/t89/matryoshka.git matryoshka
+$ git submodule update --init
+
+$ git commit -m "Add Matryoshka submodule"
+
+```
+
+
 ## Run
 
 1. Enter your repo directory and call the script `sh path/to/matryoshka.sh` (or use the more conveniant `alias`)
