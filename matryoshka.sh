@@ -11,6 +11,10 @@
 
 clear
 
+# highlight textsections within echo
+bold=`tput bold`
+normal=`tput sgr0`
+
 
 # Number of files added to the index (but uncommitted)
 staged_count="$(git status --porcelain 2>/dev/null| grep "^M" | wc -l)"
