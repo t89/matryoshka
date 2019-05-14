@@ -13,6 +13,8 @@ If you encounter any trouble though, **please let me know**
 
 ## Installation & Setup
 
+### Setup Matryoshka locally
+
 1. Clone the repository
 2. Enter `matryoshka` and grant scripts permissions to be executed:
 ```bash
