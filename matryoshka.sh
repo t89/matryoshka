@@ -15,6 +15,19 @@ clear
 bold=`tput bold`
 normal=`tput sgr0`
 
+# Check git-version. This script requires a git version >= 2.12
+git_version_installed="$(git --version | awk '{print $3;}')"
+git_version_required="2.12"
+
+# Compares two version strings and returns True if first version is greater than second
+function version { echo "$@" | awk -F. '{ printf("%d%03d%03d%03d\n", $1,$2,$3,$4); }'; }
+
+if [ "$(version "$git_version_required")" -gt "$(version "$git_version_installed")" ]; then
+  # Outdated git version detected
+  echo -e "This script requires git version >=${bold}$git_version_required${normal}.\nInstalled git version is ${bold}$git_version_installed${normal}.\n\nPlease update git."
+  exit 1
+fi
+
 
 # Number of files added to the index (but uncommitted)
 staged_count="$(git status --porcelain 2>/dev/null| grep "^M" | wc -l)"
