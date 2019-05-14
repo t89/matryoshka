@@ -14,6 +14,11 @@
 # assign parameters
 should_autocommit="$1"
 
+
+# highlight textsections within echo
+bold=`tput bold`
+normal=`tput sgr0`
+
 # Let's see if an update is necessary
 git fetch
 
@@ -37,7 +42,7 @@ if [ ! "$upstream_status" = "" ]; then
 
     # Reference submodule new head-sha1 in commit msg
     commit_msg="Update $name to $shortened_hash"
-    echo "\n  > Committing: $commit_msg"
+    echo "${bold}\n  > Committing: $commit_msg${normal}\n\n"
 
     # Move cwd out of submodule into super-projects root
     cd "$(git rev-parse --show-superproject-working-tree)"
@@ -48,7 +53,7 @@ if [ ! "$upstream_status" = "" ]; then
   fi
 
 else
-  echo "  > Already up to date."
+  echo "${bold}  > Already up to date.${normal}\n\n"
 fi
 
 exit 0

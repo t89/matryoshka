@@ -42,8 +42,8 @@ auto_commit=0
 did_stash=0
 
 # Ask for confirmation before auto-committing
-echo "You are attempting a submodule auto-update. You can cancel by pressing ctrl-c.\n\n"
-echo "Would you like to generate an auto-commit?\n"
+echo -e "You are attempting a submodule auto-update. You can cancel by pressing ctrl-c.\n\n"
+echo -e "Would you like to generate an auto-commit?\n"
 select yn in "Yes" "No"; do
   case $yn in
     Yes ) auto_commit=1; break;;
@@ -62,13 +62,13 @@ if ! [ $staged_count -eq 0 -a $untracked_count -eq 0 -a $total_count -eq 0 ]; th
   if [[ $auto_commit = 1 ]]; then
 
     # We want to auto-commit cleanly. Stashing user changes...
-    echo "\nDirty working dir. Autostashing.\n"
+    echo -e "\nDirty working dir. Autostashing.\n"
 
     # Stash save (q)uietly, including (u)ntracked files, also adding a description
     git stash save --quiet --include-untracked "Submodule update `date`"
 
     stash_sha1="$(git rev-parse stash@{0})"
-    echo "\nAutostashed working directory sha1: $stash_sha1\n"
+    echo -e "\nAutostashed working directory sha1: $stash_sha1\n"
     did_stash=1
   fi
 
@@ -87,7 +87,7 @@ git submodule foreach "sh $containing_dir_path/handle_sub.sh $auto_commit || :"
 
 # Reapply stashed changes
 if [[ $did_stash = 1 ]]; then
-  echo "\nReapplying stash\n"
+  echo -e "\nReapplying stash\n"
   git stash pop
 fi
 
