@@ -9,6 +9,8 @@
 # Update all submodules iteratively, and create concise referencing commits
 # for each update. Uses a helper script which is iterated within each submodule
 
+clear
+
 
 # Number of files added to the index (but uncommitted)
 staged_count="$(git status --porcelain 2>/dev/null| grep "^M" | wc -l)"
