@@ -39,8 +39,8 @@ if [ ! "$upstream_status" = "" ]; then
     commit_msg="Update $name to $shortened_hash"
     echo "\n  > Committing: $commit_msg"
 
-    # Move cwd out of submodule into containing repo
-    cd ..
+    # Move cwd out of submodule into super-projects root
+    cd "$(git rev-parse --show-superproject-working-tree)"
 
     git add "./$name"
     git commit -m "$commit_msg"
