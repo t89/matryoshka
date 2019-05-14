@@ -20,7 +20,7 @@ bold=`tput bold`
 normal=`tput sgr0`
 
 # Let's see if an update is necessary
-git fetch
+git fetch --quiet
 
 # Kept for debugging purposes
 # head_sha1="$(git rev-parse HEAD)"
@@ -33,7 +33,7 @@ echo "\n  > Active branch: $active_branch\n  > HEAD: $head_commit_msg\n\n"
 # $upstream_status is empty unless changes on origin are available
 if [ ! "$upstream_status" = "" ]; then
 
-  git pull origin "$active_branch"
+  git pull origin "$active_branch" --quiet
 
   updated_hash="$(git rev-parse HEAD)"
   shortened_hash="$(git rev-parse --short "$updated_hash")"
@@ -48,7 +48,7 @@ if [ ! "$upstream_status" = "" ]; then
     cd "$(git rev-parse --show-superproject-working-tree)"
 
     git add "./$name"
-    git commit -m "$commit_msg"
+    git commit -m "$commit_msg" --quiet
 
   fi
 
