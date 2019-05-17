@@ -12,8 +12,8 @@
 clear
 
 # highlight textsections within echo
-bold=`tput bold`
-normal=`tput sgr0`
+bold=$(tput bold)
+normal=$(tput sgr0)
 
 # Check git-version. This script requires a git version >= 2.12
 git_version_installed="$(git --version | awk '{print $3;}')"
@@ -65,7 +65,7 @@ if ! [ $staged_count -eq 0 -a $untracked_count -eq 0 -a $total_count -eq 0 ]; th
     echo -e "\nDirty working dir. Autostashing.\n"
 
     # Stash save (q)uietly, including (u)ntracked files, also adding a description
-    git stash save --quiet --include-untracked "Submodule update `date`"
+    git stash save --quiet --include-untracked "Submodule update $(date)"
 
     stash_sha1="$(git rev-parse stash@{0})"
     echo -e "\nAutostashed working directory sha1: $stash_sha1\n"

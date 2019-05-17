@@ -16,8 +16,8 @@ should_autocommit="$1"
 
 
 # highlight textsections within echo
-bold=`tput bold`
-normal=`tput sgr0`
+bold=$(tput bold)
+normal=$(tput sgr0)
 
 # Let's see if an update is necessary
 git fetch --quiet
