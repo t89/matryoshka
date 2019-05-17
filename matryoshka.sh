@@ -88,7 +88,7 @@ git submodule foreach "sh $containing_dir_path/handle_sub.sh $auto_commit || :"
 # Reapply stashed changes
 if [ "$did_stash" -eq 1 ]; then
   echo -e "\nReapplying stash\n"
-  git stash pop
+  git stash pop --quiet
 fi
 
 exit 0
