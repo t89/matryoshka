@@ -30,13 +30,13 @@ fi
 
 
 # Number of files added to the index (but uncommitted)
-staged_count="$(git status --porcelain 2>/dev/null| grep "^M" | wc -l)"
+staged_count="$(git status --porcelain 2>/dev/null| grep -c "^M")"
 
 # Number of files that are uncommitted and not added
-untracked_count="$(git status --porcelain 2>/dev/null| grep "^ M" | wc -l)"
+untracked_count="$(git status --porcelain 2>/dev/null| grep -c "^ M")"
 
 # Number of total uncommited files
-total_count="$(git status --porcelain 2>/dev/null| egrep "^(M| M)" | wc -l)"
+total_count="$(git status --porcelain 2>/dev/null| grep -Ec "^(M| M)")"
 
 auto_commit=0
 did_stash=0
