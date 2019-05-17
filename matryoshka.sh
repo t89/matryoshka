@@ -60,16 +60,34 @@ if ! [ "$staged_count" -eq 0 -a "$untracked_count" -eq 0 -a "$total_count" -eq 0
   # Dirty Working Area
 
   if [ "$auto_commit" -eq 1 ]; then
-
     # We want to auto-commit cleanly. Stashing user changes...
-    echo -e "\nDirty working dir. Autostashing.\n"
+
+    ##
+    # The working directory is listed as "dirty" when the submodules have been updated
+    # prior to Matryoshka. Stash will not save them, because they are already taken care of
+    # by Git. To avoid popping an old stash accidentally, we compare the stash counts and adjust
+    # actions accordingly
+
+    stash_count_old=$(git stash list | wc -l)
 
     # Stash save (q)uietly, including (u)ntracked files, also adding a description
     git stash save --quiet --include-untracked "Submodule update $(date)"
 
-    stash_sha1="$(git rev-parse stash@\{0\})"
-    echo -e "${bold}\nAutostashed working directory sha1: $stash_sha1\n${normal}"
-    did_stash=1
+    stash_count_new=$(git stash list | wc -l)
+
+    # Debug-Log kept for future reference
+    # echo "Stash Count Old: $stash_count_old"
+    # echo "Stash Count New: $stash_count_new"
+
+    # Check if a new stash has been created
+    if [ "$stash_count_new" -gt "$stash_count_old" ]; then
+      echo -e "\nDirty working directory has been auto-stashed.\n"
+
+      stash_sha1="$(git rev-parse stash@\{0\})"
+      echo -e "Autostashed working directory sha1: ${bold}$stash_sha1\n${normal}"
+      did_stash=1
+    fi
+
   fi
 
 fi
@@ -87,7 +105,7 @@ git submodule foreach "sh $containing_dir_path/handle_sub.sh $auto_commit || :"
 
 # Reapply stashed changes
 if [ "$did_stash" -eq 1 ]; then
-  echo -e "\nReapplying stash\n"
+  echo -e "\nReapplied stash.\n"
   git stash pop --quiet
 fi
 
