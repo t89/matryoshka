@@ -45,7 +45,7 @@ if [ ! "$upstream_status" = "" ]; then
     printf "%s\n  > Committing: %s%s\n\n" "${bold}" "$commit_msg" "${normal}"
 
     # Move cwd out of submodule into super-projects root
-    cd "$(git rev-parse --show-superproject-working-tree)"
+    cd "$(git rev-parse --show-superproject-working-tree)" || return
 
     git add "./$name"
     git commit -m "$commit_msg" --quiet
