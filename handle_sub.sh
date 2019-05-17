@@ -24,11 +24,11 @@ git fetch --quiet
 
 # Kept for debugging purposes
 # head_sha1="$(git rev-parse HEAD)"
-head_commit_msg="$(git rev-list --format=%B --max-count=1 $sha1)"
+head_commit_msg="$(git rev-list --format=%B --max-count=1 "$sha1")"
 active_branch="$(git rev-parse --abbrev-ref HEAD)"
-upstream_status="$(git log HEAD..origin/$active_branch --oneline)"
+upstream_status="$(git log HEAD..origin/"$active_branch" --oneline)"
 
-echo "\n  > Active branch: $active_branch\n  > HEAD: $head_commit_msg\n\n"
+printf "\n  > Active branch: %s\n  > HEAD: %s\n\n" "$active_branch" "$head_commit_msg"
 
 # $upstream_status is empty unless changes on origin are available
 if [ ! "$upstream_status" = "" ]; then
@@ -38,11 +38,11 @@ if [ ! "$upstream_status" = "" ]; then
   updated_hash="$(git rev-parse HEAD)"
   shortened_hash="$(git rev-parse --short "$updated_hash")"
 
-  if [ $should_autocommit = "1" ]; then
+  if [ "$should_autocommit" = "1" ]; then
 
     # Reference submodule new head-sha1 in commit msg
     commit_msg="Update $name to $shortened_hash"
-    echo "${bold}\n  > Committing: $commit_msg${normal}\n\n"
+    printf "%s\n  > Committing: %s%s\n\n" "${bold}" "$commit_msg" "${normal}"
 
     # Move cwd out of submodule into super-projects root
     cd "$(git rev-parse --show-superproject-working-tree)"
@@ -53,7 +53,7 @@ if [ ! "$upstream_status" = "" ]; then
   fi
 
 else
-  echo "${bold}  > Already up to date.${normal}\n\n"
+  printf "%s  > Already up to date.%s\n\n" "${bold}" "${normal}"
 fi
 
 exit 0

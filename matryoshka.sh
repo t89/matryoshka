@@ -56,10 +56,10 @@ done
 # echo $untracked_count
 # echo $total_count
 
-if ! [ $staged_count -eq 0 -a $untracked_count -eq 0 -a $total_count -eq 0 ]; then
+if ! [ "$staged_count" -eq 0 -a "$untracked_count" -eq 0 -a "$total_count" -eq 0 ]; then
   # Dirty Working Area
 
-  if [[ $auto_commit = 1 ]]; then
+  if [ "$auto_commit" -eq 1 ]; then
 
     # We want to auto-commit cleanly. Stashing user changes...
     echo -e "\nDirty working dir. Autostashing.\n"
@@ -67,8 +67,8 @@ if ! [ $staged_count -eq 0 -a $untracked_count -eq 0 -a $total_count -eq 0 ]; th
     # Stash save (q)uietly, including (u)ntracked files, also adding a description
     git stash save --quiet --include-untracked "Submodule update $(date)"
 
-    stash_sha1="$(git rev-parse stash@{0})"
-    echo -e "\nAutostashed working directory sha1: $stash_sha1\n"
+    stash_sha1="$(git rev-parse stash@\{0\})"
+    echo -e "${bold}\nAutostashed working directory sha1: $stash_sha1\n${normal}"
     did_stash=1
   fi
 
@@ -86,7 +86,7 @@ git submodule foreach "sh $containing_dir_path/handle_sub.sh $auto_commit || :"
 # git submodule foreach 'echo $path `git rev-parse HEAD` || :'
 
 # Reapply stashed changes
-if [[ $did_stash = 1 ]]; then
+if [ "$did_stash" -eq 1 ]; then
   echo -e "\nReapplying stash\n"
   git stash pop
 fi
