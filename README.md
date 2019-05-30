@@ -23,15 +23,16 @@ $ chmod +x *.sh
 
 3. Assure your Git submodules are setup properly and these commands have been run at least once since adding your latest modules:
 ```bash
-git submodule init
-git submodule update
+$ git submodule init
+$ git submodule update
 ```
 
-4. *Optional:* I prefer to have this script ready at all times without manually typing out its path. I suggest creating an `alias` within your `.bashrc` | `.zshrc`:
+4. *Optional:* I prefer to have this script ready at all times without manually typing out its path. I suggest [creating an `alias` within your `.bashrc`](https://www.cyberciti.biz/faq/create-permanent-bash-alias-linux-unix/):
 ```bash
+# Add this inside your shell's rc file:
 alias MATRYOSHKA="path/to/matryoshka/matryoshka.sh"
 ```
-Don't forget to reload your shell afterwards. ;)
+Depending on your setup you may have to restart / reload your shell afterwards.
 
 
 ### Setup as submodule
