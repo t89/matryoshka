@@ -1,5 +1,5 @@
 
-![xkcd-git](https://imgs.xkcd.com/comics/git.png)
+![icon](./misc/icon.svg)
 
 
 # Matryoshka
