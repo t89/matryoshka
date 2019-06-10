@@ -11,13 +11,22 @@
 # It takes one parameter (bool) which toggles auto-committing.
 
 
-# assign parameters
-should_autocommit="$1"
-
-
 # highlight textsections within echo
 bold=$(tput bold)
 normal=$(tput sgr0)
+
+# assign parameters
+should_autocommit="$1"
+stand_alone_repo="$2"
+
+if [ ! "$stand_alone_repo" = "all" ]; then
+  # Only one submodule should be updated
+  if [ ! "$stand_alone_repo" = "$name" ]; then
+    # Ignore others
+    printf "%s  > Skipping %s%s\n\n\n" "${bold}" "$name" "${normal}"
+    exit 0
+  fi
+fi
 
 # Let's see if an update is necessary
 git fetch --quiet

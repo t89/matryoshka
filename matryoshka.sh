@@ -41,9 +41,28 @@ total_count="$(git status --porcelain 2>/dev/null| grep -Ec "^(M| M)")"
 auto_commit=0
 did_stash=0
 
+
+echo -e "Initiated submodule update. Cancel with CTRL-C.\n"
+
+# Get names of all submodules
+# Using the foreach functionality removes dependence on tools like awk / sed
+submodules=( "all" )
+while IFS= read -r line; do
+    submodules+=( "$line" )
+done < <( git submodule --quiet foreach --recursive 'echo $name' )
+
+# Present selection to user
+PS3="${bold}Select modules you would like to update: ${normal}"
+
+select module in "${submodules[@]}"
+do
+  selection=$module
+  printf "\n  %s%s selected%s\n\n\n" "${bold}" "$selection" "${normal}"
+  break
+done
+
 # Ask for confirmation before auto-committing
-echo -e "You are attempting a submodule auto-update. You can cancel by pressing ctrl-c.\n\n"
-echo -e "Would you like to generate an auto-commit?\n"
+PS3="${bold}Generate commit(s) for updated submodule(s)?: ${normal}"
 select yn in "Yes" "No"; do
   case $yn in
     Yes ) auto_commit=1; break;;
@@ -98,7 +117,7 @@ fi
 containing_dir_path="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Calling the update script for each sub. Passing the auto_commit flag
-git submodule foreach "sh $containing_dir_path/handle_sub.sh $auto_commit || :"
+git submodule foreach "sh $containing_dir_path/handle_sub.sh $auto_commit $selection || :"
 
 # Kept for debugging purposes
 # git submodule foreach 'echo $path `git rev-parse HEAD` || :'
