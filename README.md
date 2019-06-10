@@ -58,7 +58,9 @@ $ git commit -m "Add Matryoshka submodule"
 
 1. Enter your repo directory and call the script `bash path/to/matryoshka.sh` (or use the more convenient `alias`)
 
-2. Decide if you would just like to update all submodules and leave them **unstaged* and uncommitted* or generate a commit for each updated submodule.
+2. You are presented with a list of available submodules. Select all or a specific one.
+
+3. Decide if you would just like to update and leave the changes **unstaged and uncommitted** or generate a commit for each updated submodule individually.
 
 
 ## How does auto-commit work?
