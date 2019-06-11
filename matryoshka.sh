@@ -28,20 +28,6 @@ if [ "$(version "$git_version_required")" -gt "$(version "$git_version_installed
   exit 1
 fi
 
-
-# Number of files added to the index (but uncommitted)
-staged_count="$(git status --porcelain 2>/dev/null| grep -c "^M")"
-
-# Number of files that are uncommitted and not added
-untracked_count="$(git status --porcelain 2>/dev/null| grep -c "^ M")"
-
-# Number of total uncommited files
-total_count="$(git status --porcelain 2>/dev/null| grep -Ec "^(M| M)")"
-
-auto_commit=0
-did_stash=0
-
-
 echo -e "Initiated submodule update. Cancel with CTRL-C.\n"
 
 # Get names of all submodules
@@ -69,6 +55,18 @@ select yn in "Yes" "No"; do
     No ) auto_commit=0; break;;
   esac
 done
+
+# Number of files added to the index (but uncommitted)
+staged_count="$(git status --porcelain 2>/dev/null| grep -c "^M")"
+
+# Number of files that are uncommitted and not added
+untracked_count="$(git status --porcelain 2>/dev/null| grep -c "^ M")"
+
+# Number of total uncommited files
+total_count="$(git status --porcelain 2>/dev/null| grep -Ec "^(M| M)")"
+
+auto_commit=0
+did_stash=0
 
 # Debug-Log kept for future reference
 # echo $staged_count
