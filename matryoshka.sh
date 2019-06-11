@@ -47,6 +47,9 @@ do
   break
 done
 
+auto_commit=0
+did_stash=0
+
 # Ask for confirmation before auto-committing
 PS3="${bold}Generate commit(s) for updated submodule(s)?: ${normal}"
 select yn in "Yes" "No"; do
@@ -64,9 +67,6 @@ untracked_count="$(git status --porcelain 2>/dev/null| grep -c "^ M")"
 
 # Number of total uncommited files
 total_count="$(git status --porcelain 2>/dev/null| grep -Ec "^(M| M)")"
-
-auto_commit=0
-did_stash=0
 
 # Debug-Log kept for future reference
 # echo $staged_count
