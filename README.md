@@ -1,8 +1,7 @@
 
-![icon](./misc/banner.svg)
+![banner](./misc/banner.svg)
 
-
-# Matryoshka
+___
 
 Managing Git submodules is monotonous and — more importantly — _interruptive_ work. Managing your dependencies shouldn't keep you from being productive. This script will automate the part of updating your submodules for you.
 
