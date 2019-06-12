@@ -1,5 +1,5 @@
 
-![icon](./misc/icon.svg)
+![icon](./misc/banner.svg)
 
 
 # Matryoshka
