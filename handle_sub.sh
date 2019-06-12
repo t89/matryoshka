@@ -28,6 +28,30 @@ if [ ! "$stand_alone_repo" = "all" ]; then
   fi
 fi
 
+##
+# Check if the submodule is dirty. Prevent dirty submodule commits
+# under all circumstances
+
+# Number of files added to the index (but uncommitted)
+staged_count="$(git status --porcelain 2>/dev/null| grep -c "^M")"
+
+# Number of files that are uncommitted and not added
+untracked_count="$(git status --porcelain 2>/dev/null| grep -c "^ M")"
+
+# Number of total uncommited files
+total_count="$(git status --porcelain 2>/dev/null| grep -Ec "^(M| M)")"
+
+# Debug-Log kept for future reference
+echo $staged_count
+echo $untracked_count
+echo $total_count
+
+if ! [ "$staged_count" -eq 0 -a "$untracked_count" -eq 0 -a "$total_count" -eq 0 ]; then
+  # Dirty Working Area
+  printf "%s  > Dirty submodule detected! Skipping %s%s\n\n\n" "${bold}" "$name" "${normal}"
+  exit 0
+fi
+
 # Let's see if an update is necessary
 git fetch --quiet
 
