@@ -42,9 +42,9 @@ untracked_count="$(git status --porcelain 2>/dev/null| grep -c "^ M")"
 total_count="$(git status --porcelain 2>/dev/null| grep -Ec "^(M| M)")"
 
 # Debug-Log kept for future reference
-echo $staged_count
-echo $untracked_count
-echo $total_count
+# echo $staged_count
+# echo $untracked_count
+# echo $total_count
 
 if ! [ "$staged_count" -eq 0 -a "$untracked_count" -eq 0 -a "$total_count" -eq 0 ]; then
   # Dirty Working Area
