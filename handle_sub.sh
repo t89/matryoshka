@@ -33,14 +33,22 @@ git fetch --quiet
 
 # Kept for debugging purposes
 # head_sha1="$(git rev-parse HEAD)"
+
+parent_root="$(git rev-parse --show-superproject-working-tree)"
 old_head_msg="$(git rev-list --format=%B --max-count=1 "$sha1")"
 active_branch="$(git rev-parse --abbrev-ref HEAD)"
 upstream_status="$(git log HEAD..origin/"$active_branch" --oneline)"
 
-# printf "\n  > Active branch: %s\n  > HEAD: %s\n\n" "$active_branch" "$old_head_msg"
+##
+# At this point we have stashed all other changes within the parent repo.
+# If there are modifications left, the repo has uncommited updates
+cd "$parent_root" || return
+uncommited_update_count="$(git status --porcelain 2>/dev/null| grep -Ec "^(M| M)")"
+cd "$name" || return
+
 
 # $upstream_status is empty unless changes on origin are available
-if [ ! "$upstream_status" = "" ]; then
+if [ ! "$upstream_status" = "" ] || [ "$uncommited_update_count" -gt 0 ]; then
 
   git pull origin "$active_branch" --quiet
 
@@ -60,7 +68,7 @@ if [ ! "$upstream_status" = "" ]; then
     printf "\n  > Committing: %s%s%s\n\n\n" "${bold}" "$commit_msg" "${normal}"
 
     # Move cwd out of submodule into super-projects root
-    cd "$(git rev-parse --show-superproject-working-tree)" || return
+    cd "$parent_root" || return
 
     git add "./$name"
     git commit -m "$commit_msg" --quiet
