@@ -3,7 +3,10 @@
 
 ___
 
-Managing Git submodules is monotonous and — more importantly — _interruptive_ work. Managing your dependencies shouldn't keep you from being productive. This script will automate the part of updating your submodules for you.
+Linear submodule count increase is generally accompanied by an exponential growth of headache: Keeping Git submodules up to date is monotonous and — more importantly — _interruptive_ work. Managing your dependencies shouldn't keep you from being productive! Matryoshka can automate your submodule updates and enable you to run them without losing focus of your _real_ task:
+
+![demo-gif](https://geeky.gent/misc/matryoshka_demo.gif)
+
 
 **Disclaimer: Use at your own risk. I cannot be held responsible for data loss.**
 
