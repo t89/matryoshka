@@ -67,7 +67,7 @@ upstream_status="$(git log HEAD..origin/"$active_branch" --oneline)"
 # At this point we have stashed all other changes within the parent repo.
 # If there are modifications left, the repo has uncommited updates
 cd "$parent_root" || return
-uncommited_update_count="$(git status --porcelain 2>/dev/null| grep -Ec "^(M| M)")"
+uncommited_update_count="$(git status "$name" --porcelain 2>/dev/null| grep -Ec "^(M| M)")"
 cd "$name" || return
 
 
