@@ -64,6 +64,12 @@ $ git commit -m "Add Matryoshka submodule"
 
 3. Decide if you would just like to update and leave the changes **unstaged and uncommitted** or generate a commit for each updated submodule individually.
 
+## Options
+
+* Use `-a` option to preselect `all` in the selection of submodules.
+* Use `-c` to preselect the auto commit mode.
+* Use `-m "My update message"` to specify the text of the commit message. The `<submodule>` and `<hash>` placeholders within the string will be replaced with their respective values.
+
 
 ## How does auto-commit work?
 
