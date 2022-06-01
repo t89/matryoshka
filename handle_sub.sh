@@ -10,7 +10,6 @@
 # behave relative to the _submodule's root_.
 # It takes one parameter (bool) which toggles auto-committing.
 
-
 # highlight textsections within echo
 bold=$(tput bold)
 normal=$(tput sgr0)
@@ -18,14 +17,15 @@ normal=$(tput sgr0)
 # assign parameters
 should_autocommit="$1"
 stand_alone_repo="$2"
+update_message="$3"
 
 if [ ! "$stand_alone_repo" = "all" ]; then
-  # Only one submodule should be updated
-  if [ ! "$stand_alone_repo" = "$name" ]; then
-    # Ignore others
-    printf "%s  > Skipping %s%s\n\n\n" "${bold}" "$name" "${normal}"
-    exit 0
-  fi
+    # Only one submodule should be updated
+    if [ ! "$stand_alone_repo" = "$name" ]; then
+        # Ignore others
+        printf "%s  > Skipping %s%s\n\n\n" "${bold}" "$name" "${normal}"
+        exit 0
+    fi
 fi
 
 ##
@@ -33,13 +33,13 @@ fi
 # under all circumstances
 
 # Number of files added to the index (but uncommitted)
-staged_count="$(git status --porcelain 2>/dev/null| grep -c "^M")"
+staged_count="$(git status --porcelain 2>/dev/null | grep -c "^M")"
 
 # Number of files that are uncommitted and not added
-untracked_count="$(git status --porcelain 2>/dev/null| grep -c "^ M")"
+untracked_count="$(git status --porcelain 2>/dev/null | grep -c "^ M")"
 
 # Number of total uncommited files
-total_count="$(git status --porcelain 2>/dev/null| grep -Ec "^(M| M)")"
+total_count="$(git status --porcelain 2>/dev/null | grep -Ec "^(M| M)")"
 
 # Debug-Log kept for future reference
 # echo $staged_count
@@ -47,9 +47,9 @@ total_count="$(git status --porcelain 2>/dev/null| grep -Ec "^(M| M)")"
 # echo $total_count
 
 if ! [ "$staged_count" -eq 0 -a "$untracked_count" -eq 0 -a "$total_count" -eq 0 ]; then
-  # Dirty Working Area
-  printf "%s  > Dirty submodule detected! Skipping %s%s\n\n\n" "${bold}" "$name" "${normal}"
-  exit 0
+    # Dirty Working Area
+    printf "%s  > Dirty submodule detected! Skipping %s%s\n\n\n" "${bold}" "$name" "${normal}"
+    exit 0
 fi
 
 # Let's see if an update is necessary
@@ -67,40 +67,41 @@ upstream_status="$(git log HEAD..origin/"$active_branch" --oneline)"
 # At this point we have stashed all other changes within the parent repo.
 # If there are modifications left, the repo has uncommited updates
 cd "$parent_root" || return
-uncommited_update_count="$(git status "$name" --porcelain 2>/dev/null| grep -Ec "^(M| M)")"
+uncommited_update_count="$(git status "$name" --porcelain 2>/dev/null | grep -Ec "^(M| M)")"
 cd "$name" || return
-
 
 # $upstream_status is empty unless changes on origin are available
 if [ ! "$upstream_status" = "" ] || [ "$uncommited_update_count" -gt 0 ]; then
 
-  git pull origin "$active_branch" --quiet
+    git pull origin "$active_branch" --quiet
 
-  updated_hash="$(git rev-parse HEAD)"
-  sub_head_msg="$(git rev-list --format=%B --max-count=1 "$updated_hash")"
+    updated_hash="$(git rev-parse HEAD)"
+    sub_head_msg="$(git rev-list --format=%B --max-count=1 "$updated_hash")"
 
-  # short_old_hash="$(git rev-parse --short "$sha1")"
-  short_new_hash="$(git rev-parse --short "$updated_hash")"
+    # short_old_hash="$(git rev-parse --short "$sha1")"
+    short_new_hash="$(git rev-parse --short "$updated_hash")"
 
-  printf "\n  > FROM: %s%s%s\n" "${bold}" "$old_head_msg" "${normal}"
-  printf "\n  > TO:   %s%s%s\n" "${bold}" "$sub_head_msg" "${normal}"
+    printf "\n  > FROM: %s%s%s\n" "${bold}" "$old_head_msg" "${normal}"
+    printf "\n  > TO:   %s%s%s\n" "${bold}" "$sub_head_msg" "${normal}"
 
-  if [ "$should_autocommit" = "1" ]; then
+    if [ "$should_autocommit" = "1" ]; then
 
-    # Reference submodule new head-sha1 in commit msg
-    commit_msg="Update $name to $short_new_hash"
-    printf "\n  > Committing: %s%s%s\n\n\n" "${bold}" "$commit_msg" "${normal}"
+        # Reference submodule new head-sha1 in commit msg
+        commit_msg=${update_message/<submodule>/"$name"}
+        commit_msg=${commit_msg/<hash>/$short_new_hash}
 
-    # Move cwd out of submodule into super-projects root
-    cd "$parent_root" || return
+        printf "\n  > Committing: %s%s%s\n\n\n" "${bold}" "$commit_msg" "${normal}"
 
-    git add "./$name"
-    git commit -m "$commit_msg" --quiet
+        # Move cwd out of submodule into super-projects root
+        cd "$parent_root" || return
 
-  fi
+        git add "./$name"
+        git commit -m "$commit_msg" --quiet
+
+    fi
 
 else
-  printf "%s  > Already up to date.%s\n\n\n" "${bold}" "${normal}"
+    printf "%s  > Already up to date.%s\n\n\n" "${bold}" "${normal}"
 fi
 
 exit 0
