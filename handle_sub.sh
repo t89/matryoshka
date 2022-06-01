@@ -17,6 +17,7 @@ normal=$(tput sgr0)
 # assign parameters
 should_autocommit="$1"
 stand_alone_repo="$2"
+update_message="$3"
 
 if [ ! "$stand_alone_repo" = "all" ]; then
     # Only one submodule should be updated
@@ -86,7 +87,9 @@ if [ ! "$upstream_status" = "" ] || [ "$uncommited_update_count" -gt 0 ]; then
     if [ "$should_autocommit" = "1" ]; then
 
         # Reference submodule new head-sha1 in commit msg
-        commit_msg="Update $name to $short_new_hash"
+        commit_msg=${update_message/<submodule>/"$name"}
+        commit_msg=${commit_msg/<hash>/$short_new_hash}
+
         printf "\n  > Committing: %s%s%s\n\n\n" "${bold}" "$commit_msg" "${normal}"
 
         # Move cwd out of submodule into super-projects root

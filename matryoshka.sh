@@ -11,18 +11,41 @@
 
 clear
 
+#getopts "acm:"
+
 # Parsing options
-while getopts "ac" OPTION; do
-    case $OPTION in
+#while getopts "ac" OPTION; do
+#    case $OPTION in
+#    a)
+#        selection="all"
+#        ;;
+#    c)
+#        auto_commit=1
+#        ;;
+#    *)
+#        echo "Incorrect options provided"
+#        exit 1
+#        ;;
+#    esac
+#done
+
+while getopts "acm:" options; do
+    case "${options}" in
     a)
         selection="all"
         ;;
     c)
         auto_commit=1
         ;;
+    m)
+        commit_msg=${OPTARG}
+        ;;
+    :)
+        echo "Error: -${OPTARG} requires an argument."
+        exit
+        ;;
     *)
-        echo "Incorrect options provided"
-        exit 1
+        exit
         ;;
     esac
 done
@@ -139,8 +162,10 @@ fi
 # REFERENCE: https://stackoverflow.com/q/4774054
 containing_dir_path="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+commit_msg=${commit_msg:="Update <submodule> to <hash>"}
+
 # Calling the update script for each sub. Passing the auto_commit flag
-git submodule foreach "sh $containing_dir_path/handle_sub.sh $auto_commit $selection || :"
+git submodule foreach "bash $containing_dir_path/handle_sub.sh $auto_commit $selection '$commit_msg' || :"
 
 # Kept for debugging purposes
 # git submodule foreach 'echo $path `git rev-parse HEAD` || :'
