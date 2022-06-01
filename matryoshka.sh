@@ -11,6 +11,22 @@
 
 clear
 
+# Parsing options
+while getopts "ac" OPTION; do
+    case $OPTION in
+    a)
+        selection="all"
+        ;;
+    c)
+        auto_commit=1
+        ;;
+    *)
+        echo "Incorrect options provided"
+        exit 1
+        ;;
+    esac
+done
+
 # highlight textsections within echo
 bold=$(tput bold)
 normal=$(tput sgr0)
@@ -30,39 +46,43 @@ fi
 
 echo -e "Initiated submodule update. Cancel with CTRL-C.\n"
 
-# Get names of all submodules
-# Using the foreach functionality removes dependence on tools like awk / sed
-submodules=("all")
-while IFS= read -r line; do
-    submodules+=("$line")
-done < <(git submodule --quiet foreach --recursive 'echo $name')
+if [ "$selection" == "" ]; then
+    # Get names of all submodules
+    # Using the foreach functionality removes dependence on tools like awk / sed
+    submodules=("all")
+    while IFS= read -r line; do
+        submodules+=("$line")
+    done < <(git submodule --quiet foreach --recursive 'echo $name')
 
-# Present selection to user
-PS3="${bold}Select modules you would like to update: ${normal}"
+    # Present selection to user
+    PS3="${bold}Select modules you would like to update: ${normal}"
 
-select module in "${submodules[@]}"; do
-    selection=$module
-    printf "\n  %s%s selected%s\n\n\n" "${bold}" "$selection" "${normal}"
-    break
-done
+    select module in "${submodules[@]}"; do
+        selection=$module
+        printf "\n  %s%s selected%s\n\n\n" "${bold}" "$selection" "${normal}"
+        break
+    done
+fi
 
-auto_commit=0
+auto_commit=${auto_commit:=0}
 did_stash=0
 
-# Ask for confirmation before auto-committing
-PS3="${bold}Generate commit(s) for updated submodule(s)?: ${normal}"
-select yn in "Yes" "No"; do
-    case $yn in
-    Yes)
-        auto_commit=1
-        break
-        ;;
-    No)
-        auto_commit=0
-        break
-        ;;
-    esac
-done
+if [ "$auto_commit" == 0 ]; then
+    # Ask for confirmation before auto-committing
+    PS3="${bold}Generate commit(s) for updated submodule(s)?: ${normal}"
+    select yn in "Yes" "No"; do
+        case $yn in
+        Yes)
+            auto_commit=1
+            break
+            ;;
+        No)
+            auto_commit=0
+            break
+            ;;
+        esac
+    done
+fi
 
 # Number of files added to the index (but uncommitted)
 staged_count="$(git status --porcelain 2>/dev/null | grep -c "^M")"
